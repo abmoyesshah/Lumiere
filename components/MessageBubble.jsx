@@ -1,6 +1,7 @@
+import { memo } from "react";
 import SafeImage from "./SafeImage";
 
-function Avatar({ src, name, onClick }) {
+const Avatar = memo(function Avatar({ src, name, onClick }) {
   return (
     <SafeImage
       src={src} name={name} onClick={onClick}
@@ -9,9 +10,9 @@ function Avatar({ src, name, onClick }) {
       iconSize={12}
     />
   );
-}
+});
 
-export default function MessageBubble({
+const MessageBubble = memo(function MessageBubble({
   message, isOwn,
   userProfilePicture, matchProfilePicture,
   userName, matchName, onAvatarClick,
@@ -21,13 +22,11 @@ export default function MessageBubble({
       {!isOwn && <Avatar src={matchProfilePicture} name={matchName} onClick={onAvatarClick} />}
       <div
         className={`max-w-[78%] sm:max-w-md px-4 py-2.5 text-sm leading-relaxed transition ${
-          isOwn
-            ? "text-white rounded-3xl rounded-br-md"
-            : "text-white border border-white/[0.1] rounded-3xl rounded-bl-md"
+          isOwn ? "text-white rounded-3xl rounded-br-md" : "text-white border border-white/[0.1] rounded-3xl rounded-bl-md"
         }`}
         style={isOwn
           ? { background: "linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #7c3aed 100%)", boxShadow: "0 8px 20px -6px rgba(168,85,247,0.5)" }
-          : { background: "rgba(255,255,255,0.06)", backdropFilter: "blur(12px)" }
+          : { background: "rgba(255,255,255,0.06)" }
         }
       >
         {message.text}
@@ -35,4 +34,6 @@ export default function MessageBubble({
       {isOwn && <Avatar src={userProfilePicture} name={userName} onClick={onAvatarClick} />}
     </div>
   );
-}
+});
+
+export default MessageBubble;

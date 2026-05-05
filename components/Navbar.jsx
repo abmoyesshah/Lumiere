@@ -1,11 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { User, MessageCircle, Video, LogOut, LogIn, UserPlus, Heart } from "lucide-react";
 
-export default function Navbar({
-  user, onLogout, transparent = false, variant = "default", onOpenAuth,
-}) {
+const Navbar = memo(function Navbar({ user, onLogout, transparent = false, variant = "default", onOpenAuth }) {
   const router = useRouter();
 
   const btn = "group flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-[11px] sm:text-xs font-medium tracking-wide transition-all";
@@ -19,11 +18,7 @@ export default function Navbar({
 
   return (
     <nav
-      className={
-        transparent
-          ? "absolute top-0 left-0 right-0 z-50 bg-transparent"
-          : "sticky top-0 z-50 backdrop-blur-2xl border-b border-white/[0.06]"
-      }
+      className={transparent ? "absolute top-0 left-0 right-0 z-50 bg-transparent" : "sticky top-0 z-50 backdrop-blur-2xl border-b border-white/[0.06]"}
       style={transparent ? undefined : { background: "rgba(10,6,18,0.7)" }}
     >
       <div className="container mx-auto px-4 sm:px-8">
@@ -40,9 +35,7 @@ export default function Navbar({
               }}>
               <Heart size={16} className="text-white fill-white" />
             </span>
-            <span className="text-lg sm:text-xl font-bold tracking-tight text-white">
-              Lumière
-            </span>
+            <span className="text-lg sm:text-xl font-bold tracking-tight text-white">Lumière</span>
           </motion.button>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -88,4 +81,6 @@ export default function Navbar({
       </div>
     </nav>
   );
-}
+});
+
+export default Navbar;
