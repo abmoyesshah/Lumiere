@@ -1,39 +1,27 @@
-import {
-  User, Heart, Briefcase, GraduationCap, Ruler, Moon,
-  Cigarette, Wine, Dumbbell, Utensils, PawPrint, Baby, Globe,
-} from "lucide-react";
+"use client";
+import { memo } from "react";
+import { User, Heart, Briefcase, GraduationCap, Ruler, Moon, Cigarette, Wine, Dumbbell, Utensils, PawPrint, Baby, Globe } from "lucide-react";
 
-function InfoField({ label, value, icon }) {
+const InfoField = memo(function InfoField({ label, value, icon }) {
   return (
-    <div className="border border-white/[0.06] hover:border-[#d946ef]/30 rounded-lg p-4 transition group">
+    <div className="border border-white/[0.06] hover:border-[#d946ef]/30 rounded-lg p-4 transition"
+      style={{ background: "linear-gradient(135deg, #1a0f2e, #0f081c)" }}>
       <p className="text-[10px] uppercase tracking-[0.25em] text-white/40 font-light flex items-center gap-1.5 mb-2">
-        <span className="text-[#d946ef]/70">{icon}</span>
-        {label}
+        <span className="text-[#d946ef]/70">{icon}</span>{label}
       </p>
       <p className="font-serif text-base text-white capitalize">{value}</p>
     </div>
   );
-}
+});
 
-function SectionHeader({ title }) {
-  return (
-    <div className="flex items-center gap-3 mb-5">
-      <h3 className="font-serif text-xl text-white tracking-wide">{title}</h3>
-      <div className="flex-1 h-px bg-white/[0.06]" />
-    </div>
-  );
-}
-
-export default function AboutTab({ profileData }) {
-  const {
-    gender, relationshipGoal, occupation, education, interests,
-    height, zodiacSign, smoking, drinking, workout, diet, pets, kids, languages,
-  } = profileData;
+const AboutTab = memo(function AboutTab({ profileData }) {
+  const { gender, relationshipGoal, occupation, education, interests, height, zodiacSign, smoking, drinking, workout, diet, pets, kids, languages } = profileData;
 
   return (
-    <div className="bg-[#15082a]/60 border border-white/[0.06] rounded-2xl p-6 sm:p-8 space-y-8">
+    <div className="rounded-2xl p-6 sm:p-8 space-y-8 border border-white/[0.06]"
+      style={{ background: "linear-gradient(180deg, #1a0f2e, #0f081c)" }}>
       <div>
-        <SectionHeader title="Basics" />
+        <h3 className="font-serif text-xl text-white mb-5">Basics</h3>
         <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
           {gender && <InfoField label="Gender" value={gender} icon={<User size={11} />} />}
           {relationshipGoal && <InfoField label="Looking for" value={relationshipGoal} icon={<Heart size={11} />} />}
@@ -41,23 +29,18 @@ export default function AboutTab({ profileData }) {
           {education && <InfoField label="Education" value={education} icon={<GraduationCap size={11} />} />}
         </div>
       </div>
-
       {interests?.length > 0 && (
         <div>
-          <SectionHeader title="Interests" />
+          <h3 className="font-serif text-xl text-white mb-5">Interests</h3>
           <div className="flex flex-wrap gap-2">
             {interests.map((interest, idx) => (
-              <span key={idx}
-                className="border border-white/10 hover:border-[#d946ef]/40 text-white/80 px-4 py-1.5 rounded-full text-xs font-light transition cursor-default">
-                {interest}
-              </span>
+              <span key={idx} className="border border-white/10 hover:border-[#d946ef]/40 text-white/80 px-4 py-1.5 rounded-full text-xs font-light">{interest}</span>
             ))}
           </div>
         </div>
       )}
-
       <div>
-        <SectionHeader title="Lifestyle" />
+        <h3 className="font-serif text-xl text-white mb-5">Lifestyle</h3>
         <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
           {height && <InfoField label="Height" value={height} icon={<Ruler size={11} />} />}
           {zodiacSign && <InfoField label="Zodiac" value={zodiacSign} icon={<Moon size={11} />} />}
@@ -72,4 +55,6 @@ export default function AboutTab({ profileData }) {
       </div>
     </div>
   );
-}
+});
+
+export default AboutTab;

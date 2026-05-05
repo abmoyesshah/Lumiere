@@ -31,7 +31,7 @@ function VideoCallContent() {
 
   const config = { iceServers: [{ urls: ["stun:stun.l.google.com:19302"] }] };
 
-  useEffect(() => { if (!loading && !user) router.push("/"); }, [user, loading]);
+  useEffect(() => { if (!loading && !user) router.push("/"); }, [user, loading, router]);
 
   useEffect(() => {
     if (socket && matchId) {
@@ -44,7 +44,7 @@ function VideoCallContent() {
 
   useEffect(() => {
     if (callActive) {
-      durationIntervalRef.current = setInterval(() => setCallDuration((p) => p + 1), 1000);
+      durationIntervalRef.current = setInterval(() => setCallDuration(p => p + 1), 1000);
     } else {
       clearInterval(durationIntervalRef.current);
       setCallDuration(0);
@@ -65,7 +65,7 @@ function VideoCallContent() {
       if (localVideoRef.current) localVideoRef.current.srcObject = stream;
       const pc = new RTCPeerConnection(config);
       peerConnectionRef.current = pc;
-      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+      stream.getTracks().forEach(track => pc.addTrack(track, stream));
       pc.ontrack = (event) => {
         setRemoteStream(event.streams[0]);
         if (remoteVideoRef.current) remoteVideoRef.current.srcObject = event.streams[0];
@@ -77,30 +77,34 @@ function VideoCallContent() {
       await pc.setLocalDescription(offer);
       socket?.emit("call_offer", { to: matchId, offer });
       setCallActive(true);
-    } catch (error) { console.error(error); alert("Failed to access camera or microphone"); }
+    } catch { alert("Failed to access camera or microphone"); }
   };
 
   const handleRemoteAnswer = async (answer) => {
     if (peerConnectionRef.current) await peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(answer));
   };
+
   const addIceCandidate = async (candidate) => {
-    try { if (peerConnectionRef.current && candidate) await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate)); }
-    catch (e) { console.error(e); }
+    try { if (peerConnectionRef.current && candidate) await peerConnectionRef.current.addIceCandidate(new RTCIceCandidate(candidate)); } catch {}
   };
+
   const toggleMute = () => {
     if (localStream) { const t = localStream.getAudioTracks()[0]; if (t) { t.enabled = !t.enabled; setIsMuted(!t.enabled); } }
   };
+
   const toggleVideo = () => {
     if (localStream) { const t = localStream.getVideoTracks()[0]; if (t) { t.enabled = !t.enabled; setIsVideoOff(!t.enabled); } }
   };
+
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); setIsFullScreen(true); }
     else { document.exitFullscreen(); setIsFullScreen(false); }
   };
+
   const endCall = () => {
     if (peerConnectionRef.current) peerConnectionRef.current.close();
-    if (localStream) localStream.getTracks().forEach((t) => t.stop());
-    if (remoteStream) remoteStream.getTracks().forEach((t) => t.stop());
+    if (localStream) localStream.getTracks().forEach(t => t.stop());
+    if (remoteStream) remoteStream.getTracks().forEach(t => t.stop());
     setCallActive(false); setLocalStream(null); setRemoteStream(null);
     router.push("/chat");
   };
@@ -108,15 +112,11 @@ function VideoCallContent() {
   if (loading || !user) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-[#0a0612] relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden" style={{ background: "#0a0612" }}>
       <AnimatedBackground />
-
       <div className="relative z-10 container mx-auto px-4 sm:px-6 py-6">
-        <motion.button
-          whileHover={{ x: -3 }} whileTap={{ scale: 0.97 }}
-          onClick={() => router.push("/chat")}
-          className="text-white/50 hover:text-[#d946ef] flex items-center gap-2 mb-6 text-[11px] uppercase tracking-[0.25em] font-light transition"
-        >
+        <motion.button whileHover={{ x: -3 }} whileTap={{ scale: 0.97 }} onClick={() => router.push("/chat")}
+          className="text-white/50 hover:text-[#d946ef] flex items-center gap-2 mb-6 text-[11px] uppercase tracking-[0.25em] font-light">
           <ArrowLeft size={14} /> Back to Messages
         </motion.button>
 
@@ -124,14 +124,10 @@ function VideoCallContent() {
           {!callActive ? (
             <CallSetupScreen onStartCall={startCall} />
           ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 220, damping: 24 }}
-              className="relative rounded-2xl overflow-hidden border border-white/[0.08] bg-black"
-            >
-              <div className="relative aspect-video bg-[#0a0612]">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              className="relative rounded-2xl overflow-hidden border border-white/[0.08]" style={{ background: "#000" }}>
+              <div className="relative aspect-video" style={{ background: "linear-gradient(180deg, #0a0612, #120820)" }}>
                 <video ref={remoteVideoRef} autoPlay playsInline className="w-full h-full object-cover" />
-
                 {!remoteStream && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50">
                     <div className="relative w-20 h-20 mb-5">
@@ -143,32 +139,24 @@ function VideoCallContent() {
                     <p className="text-[11px] uppercase tracking-[0.3em] font-light">Connecting</p>
                   </div>
                 )}
-
-                {/* Local PiP */}
-                <div className="absolute bottom-4 right-4 w-28 sm:w-44 aspect-video rounded-lg overflow-hidden border border-white/15 bg-black">
+                <div className="absolute bottom-4 right-4 w-28 sm:w-44 aspect-video rounded-lg overflow-hidden border border-white/15">
                   <video ref={localVideoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
                   {isVideoOff && (
-                    <div className="absolute inset-0 bg-black/85 flex items-center justify-center text-white/40 text-[10px] uppercase tracking-[0.2em]">
-                      Off
-                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center text-white/40 text-[10px] uppercase tracking-[0.2em]"
+                      style={{ background: "linear-gradient(180deg, #0a0612, #120820)" }}>Off</div>
                   )}
                 </div>
-
-                {/* Duration */}
-                <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white text-xs font-mono">
+                <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 text-white text-xs font-mono"
+                  style={{ background: "linear-gradient(135deg, #0a0612, #1a0f2e)" }}>
                   <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                   {formatDuration(callDuration)}
                 </div>
-
-                {/* Status */}
-                <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur border border-white/10 text-[10px] uppercase tracking-[0.2em] font-light">
+                <div className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 text-[10px] uppercase tracking-[0.2em] font-light"
+                  style={{ background: "linear-gradient(135deg, #0a0612, #1a0f2e)" }}>
                   <span className={`w-1.5 h-1.5 rounded-full ${isConnected ? "bg-[#d946ef]" : "bg-amber-400 animate-pulse"}`} />
-                  <span className={isConnected ? "text-[#d946ef]" : "text-amber-200"}>
-                    {isConnected ? "Live" : "Connecting"}
-                  </span>
+                  <span className={isConnected ? "text-[#d946ef]" : "text-amber-200"}>{isConnected ? "Live" : "Connecting"}</span>
                 </div>
               </div>
-
               <VideoCallControls
                 isMuted={isMuted} toggleMute={toggleMute}
                 isVideoOff={isVideoOff} toggleVideo={toggleVideo}
