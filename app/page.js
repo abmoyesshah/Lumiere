@@ -12,7 +12,7 @@ const AuthModal = lazy(() => import("@/components/AuthModal"));
 const ProfileCard = lazy(() => import("@/components/ProfileCard"));
 
 const sampleProfiles = [
-  { id: 1, name: "Jannie", age: 28, location: "New York", profilePicture: "/profile-11.png", bio: "Coffee addict, yoga lover, and sunset chaser.", interests: ["Travel", "Photography", "Cooking", "Yoga", "Hiking"], matchScore: 95 },
+  { id: 1, name: "Jannie", age: 28, location: "New York", profilePicture: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=500&fit=crop", bio: "Coffee addict, yoga lover, and sunset chaser.", bio: "Coffee addict, yoga lover, and sunset chaser.", interests: ["Travel", "Photography", "Cooking", "Yoga", "Hiking"], matchScore: 95 },
   { id: 2, name: "Cara", age: 32, location: "Los Angeles", profilePicture: "/profile-10.png", bio: "Musician and producer.", interests: ["Music", "Surfing", "Art", "Concerts", "Travel"], matchScore: 88 },
   { id: 3, name: "Emma", age: 26, location: "Chicago", profilePicture: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop", bio: "Architecture student by day, painter by night.", interests: ["Architecture", "Painting", "Hiking", "Museums", "Coffee"], matchScore: 92 },
   { id: 4, name: "Aria", age: 30, location: "Miami", profilePicture: "/profile-3.png", bio: "Chef and food explorer.", interests: ["Cooking", "Fitness", "Travel", "Wine", "Beach"], matchScore: 87 },
