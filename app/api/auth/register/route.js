@@ -2,14 +2,13 @@ export const runtime = "nodejs";
 import { connectDB } from '@/lib/db';
 import { hashPassword, setAuthCookie } from '@/lib/auth';
 import User from '@/models/User';
-import { generateProfileEmbedding } from '@/lib/embeddings';
 
 export async function POST(req) {
   try {
     await connectDB();
-    const { email, password, name, age, location, bio, interests } = await req.json();
+    const { email, password, name } = await req.json();
 
-    if (!email || !password || !name || !age || !location) {
+    if (!email || !password || !name) {
       return Response.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -25,32 +24,21 @@ export async function POST(req) {
     }
 
     const hashedPassword = await hashPassword(password);
-    
-    const profileData = {
-      name,
-      age,
-      location,
-      bio,
-      interests: interests || [],
-    };
-
-    const embedding = await generateProfileEmbedding(profileData);
 
     const user = new User({
       email,
       password: hashedPassword,
       name,
-      age,
-      location,
-      bio: bio || '',
-      interests: interests || [],
-      embedding,
+      age: 0,
+      location: '',
+      bio: '',
+      interests: [],
+      embedding: [],
     });
 
     await user.save();
     await setAuthCookie(user._id.toString());
 
-    // IMPORTANT: Include profilePicture in response (even if empty)
     return Response.json(
       {
         user: {
@@ -58,7 +46,7 @@ export async function POST(req) {
           email: user.email,
           name: user.name,
           age: user.age,
-          profilePicture: user.profilePicture || null, // ADD THIS LINE
+          profilePicture: user.profilePicture || null,
           location: user.location,
         },
       },
@@ -72,7 +60,6 @@ export async function POST(req) {
     );
   }
 }
-
 
 
 

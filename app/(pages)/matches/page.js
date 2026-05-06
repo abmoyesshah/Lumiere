@@ -10,41 +10,41 @@ import Navbar from "@/components/Navbar";
 import SafeImage from "@/components/SafeImage";
 
 const TABS = [
-  { id: "likes_you", label: "Likes You",  icon: Heart,    endpoint: "/api/likes/received" },
-  { id: "you_liked", label: "You Liked",  icon: Sparkles, endpoint: "/api/likes/sent" },
-  { id: "mutual",    label: "Matches",    icon: Users,    endpoint: "/api/matches/mutual" },
+  { id: "likes_you", label: "Likes You", icon: Heart, endpoint: "/api/likes/received" },
+  { id: "you_liked", label: "You Liked", icon: Sparkles, endpoint: "/api/likes/sent" },
+  { id: "mutual", label: "Matches", icon: Users, endpoint: "/api/matches/mutual" },
 ];
 
 const MatchCard = memo(function MatchCard({ profile, isMutual, onView, onMessage }) {
   return (
-    <motion.div whileHover={{ y: -4 }} transition={{ type: "spring", stiffness: 280, damping: 22 }}
-      className="group relative rounded-2xl overflow-hidden border border-white/[0.06] cursor-pointer"
+    <motion.div whileHover={{ y: -3 }} transition={{ type: "spring", stiffness: 280, damping: 22 }}
+      className="group relative rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.06] cursor-pointer w-full"
       style={{ background: "linear-gradient(180deg, #1e0f32, #0f081c)" }}
       onClick={onView}>
       <div className="relative aspect-[3/4]">
         <SafeImage user={profile} name={profile.name} rounded="rounded-none" className="w-full h-full"
-          bgClassName="bg-violet-950/40" textClassName="text-[#d946ef] text-5xl" iconSize={36} />
+          bgClassName="bg-violet-950/40" textClassName="text-[#d946ef] text-3xl sm:text-5xl" iconSize={28} />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
         {isMutual && (
-          <div className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
+          <div className="absolute top-2 right-2 inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full"
             style={{ background: "linear-gradient(135deg, #d946ef, #7c3aed)" }}>
-            <Heart size={9} className="fill-black text-white" />
-            <span className="text-[9px] uppercase tracking-[0.2em] text-white font-medium">Match</span>
+            <Heart size={8} className="fill-black text-white" />
+            <span className="text-[7px] sm:text-[9px] uppercase tracking-[0.2em] text-white font-medium">Match</span>
           </div>
         )}
-        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-          <p className="text-white text-base sm:text-lg tracking-wide leading-tight truncate">
-            {profile.name}{profile.age && <span className="text-white/60 font-light ml-1">{profile.age}</span>}
+        <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3">
+          <p className="text-white text-sm sm:text-base font-semibold tracking-wide truncate">
+            {profile.name}{profile.age && <span className="text-white/60 font-light ml-1 text-xs sm:text-sm">{profile.age}</span>}
           </p>
           {profile.location && (
-            <p className="text-[9px] uppercase tracking-[0.2em] text-[#d946ef] font-light mt-0.5 truncate">{profile.location}</p>
+            <p className="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-[#d946ef] font-light mt-0.5 truncate">{profile.location}</p>
           )}
         </div>
         {isMutual && (
           <button onClick={(e) => { e.stopPropagation(); onMessage(); }}
-            className="absolute bottom-3 right-3 w-9 h-9 rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+            className="absolute bottom-2 right-2 w-7 h-7 sm:w-9 sm:h-9 rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
             style={{ background: "linear-gradient(135deg, #d946ef, #a855f7, #7c3aed)" }}>
-            <MessageCircle size={14} />
+            <MessageCircle size={12} />
           </button>
         )}
       </div>
@@ -55,19 +55,19 @@ const MatchCard = memo(function MatchCard({ profile, isMutual, onView, onMessage
 const EmptyState = memo(function EmptyState({ tab, onDiscover }) {
   const copy = {
     likes_you: { title: "No admirers yet", desc: "When someone likes your profile, they'll appear here.", icon: Heart },
-    you_liked: { title: "Nothing yet",     desc: "Profiles you connect with will show up here.",         icon: Sparkles },
-    mutual:    { title: "No matches yet",  desc: "When you and someone like each other, it's a match.",  icon: Users },
+    you_liked: { title: "Nothing yet", desc: "Profiles you connect with will show up here.", icon: Sparkles },
+    mutual: { title: "No matches yet", desc: "When you and someone like each other, it's a match.", icon: Users },
   }[tab];
   const Icon = copy.icon;
   return (
-    <div className="flex flex-col items-center text-center py-20">
-      <div className="w-16 h-16 rounded-full border border-[#d946ef]/30 flex items-center justify-center mb-6">
-        <Icon className="w-7 h-7 text-[#d946ef]/60" />
+    <div className="flex flex-col items-center text-center py-16 px-4">
+      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-[#d946ef]/30 flex items-center justify-center mb-4 sm:mb-6">
+        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-[#d946ef]/60" />
       </div>
-      <h3 className="text-2xl text-white tracking-wide mb-3">{copy.title}</h3>
-      <p className="text-sm text-white/50 font-light max-w-sm mb-8">{copy.desc}</p>
+      <h3 className="text-xl sm:text-2xl text-white tracking-wide mb-2">{copy.title}</h3>
+      <p className="text-xs sm:text-sm text-white/50 font-light max-w-sm mb-6">{copy.desc}</p>
       <motion.button whileTap={{ scale: 0.97 }} onClick={onDiscover}
-        className="text-white px-8 py-3 rounded-full text-[11px] uppercase tracking-[0.25em] font-medium"
+        className="text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-medium"
         style={{ background: "linear-gradient(135deg, #d946ef, #a855f7, #7c3aed)" }}>
         Discover
       </motion.button>
@@ -100,22 +100,24 @@ export default function MatchesPage() {
   const profiles = data[activeTab] || [];
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: "#0a0612" }}>
+    <div className="min-h-screen w-full overflow-x-hidden" style={{ background: "#0a0612" }}>
       <AnimatedBackground />
-      <div className="relative z-10">
+      <div className="relative z-10 w-full">
         <Navbar user={user} onLogout={() => router.push("/")} />
-        <div className="container mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 max-w-6xl">
+        <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 pt-6 sm:pt-10 pb-20">
           <motion.button whileHover={{ x: -3 }} whileTap={{ scale: 0.97 }} onClick={() => router.push("/")}
-            className="text-white/50 hover:text-[#d946ef] flex items-center gap-2 mb-6 text-[11px] uppercase tracking-[0.25em] font-light">
-            <ArrowLeft size={14} /> Back
+            className="text-white/50 hover:text-[#d946ef] flex items-center gap-2 mb-5 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-light">
+            <ArrowLeft size={13} /> Back
           </motion.button>
-          <div className="text-center mb-10">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl text-white tracking-wide">
+          
+          <div className="text-center mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl text-white tracking-wide">
               Your <span className="italic text-[#d946ef]">circle</span>
             </h1>
           </div>
-          <div className="flex items-center justify-center mb-10">
-            <div className="inline-flex border border-white/[0.06] rounded-full p-1.5 gap-1"
+
+          <div className="flex items-center justify-center mb-8">
+            <div className="inline-flex border border-white/[0.06] rounded-full p-1 gap-0.5 sm:gap-1 flex-wrap justify-center"
               style={{ background: "linear-gradient(180deg, #0f0820, #0a0612)" }}>
               {TABS.map(tab => {
                 const Icon = tab.icon;
@@ -123,16 +125,16 @@ export default function MatchesPage() {
                 const count = data[tab.id]?.length || 0;
                 return (
                   <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                    className={`relative px-4 sm:px-6 py-2.5 rounded-full text-[10px] sm:text-[11px] uppercase tracking-[0.22em] font-light flex items-center gap-2 ${active ? "text-white" : "text-white/60 hover:text-white"}`}>
+                    className={`relative px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-[9px] sm:text-[11px] uppercase tracking-[0.22em] font-light flex items-center gap-1.5 sm:gap-2 ${active ? "text-white" : "text-white/60 hover:text-white"}`}>
                     {active && (
                       <motion.span layoutId="matches-tab" className="absolute inset-0 rounded-full"
                         style={{ background: "linear-gradient(135deg, #d946ef, #7c3aed)" }}
                         transition={{ type: "spring", stiffness: 350, damping: 30 }} />
                     )}
-                    <span className="relative flex items-center gap-2">
-                      <Icon size={12} />{tab.label}
+                    <span className="relative flex items-center gap-1.5">
+                      <Icon size={11} />{tab.label}
                       {count > 0 && (
-                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${active ? "text-white" : "text-white/70"}`}
+                        <span className={`text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded-full ${active ? "text-white" : "text-white/70"}`}
                           style={{ background: active ? "#0a0612" : "linear-gradient(135deg, #1a0f2e, #0f081c)" }}>{count}</span>
                       )}
                     </span>
@@ -141,14 +143,15 @@ export default function MatchesPage() {
               })}
             </div>
           </div>
+
           {loadingTab ? (
-            <div className="py-20"><LoadingSpinner /></div>
+            <div className="py-16"><LoadingSpinner /></div>
           ) : profiles.length === 0 ? (
             <EmptyState tab={activeTab} onDiscover={() => router.push("/")} />
           ) : (
             <AnimatePresence mode="wait">
-              <motion.div key={activeTab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+              <motion.div key={activeTab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+                className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
                 {profiles.map((p, i) => (
                   <MatchCard key={p._id || p.id || i} profile={p} isMutual={activeTab === "mutual"}
                     onView={() => router.push(`/profile/${p._id || p.id}`)}
